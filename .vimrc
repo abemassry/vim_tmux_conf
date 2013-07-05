@@ -24,13 +24,15 @@ set wildmenu
 set wildmode=list:longest,full
 
 set number
+set laststatus=2
+set statusline=%<\ %n:%f\ %m%r%y%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 "some color options
-hi LineNr ctermfg=blue
-hi TabLine ctermfg=blue ctermbg=darkgrey
-hi TabLineSel ctermfg=grey ctermbg=blue
-hi TabLineFill ctermfg=black ctermbg=blue
-hi Pmenu ctermfg=white ctermbg=blue
-hi PmenuSel ctermfg=blue ctermbg=white
+"hi LineNr ctermfg=blue
+"hi TabLine ctermfg=blue ctermbg=darkgrey
+"hi TabLineSel ctermfg=grey ctermbg=blue
+"hi TabLineFill ctermfg=black ctermbg=blue
+"hi Pmenu ctermfg=blue ctermbg=darkgrey
+"hi PmenuSel ctermfg=grey ctermbg=blue
 set smartcase
 set ignorecase
 set incsearch
@@ -42,3 +44,6 @@ nnoremap <silent> zj o<Esc>
 nnoremap <silent> zk O<Esc>
 nnoremap <space> za
 set pastetoggle=<F2>
+colorscheme Tomorrow-Night
+"set background=dark
+"colorscheme solarized
