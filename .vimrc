@@ -6,6 +6,8 @@ autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
 
+au BufNewFile,BufRead *.ejs set filetype=html
+
 filetype on
 filetype plugin on
 syntax enable
