@@ -1,35 +1,27 @@
-" Tomorrow Night - Full Colour and 256 Colour
+" Tomorrow Night Bright - Full Colour and 256 Colour
 " http://chriskempson.com
 "
 " Hex colour conversion functions borrowed from the theme "Desert256""
 
 " Default GUI Colours
-let s:foreground = "c5c8c6"
-let s:background = "1d1f21"
-let s:selection = "373b41"
-let s:line = "282a2e"
+let s:foreground = "eaeaea"
+let s:background = "000000"
+let s:selection = "424242"
+let s:line = "2a2a2a"
 let s:comment = "969896"
-let s:red = "cc6666"
-let s:orange = "de935f"
-let s:yellow = "f0c674"
-let s:green = "b5bd68"
-let s:aqua = "8abeb7"
-let s:blue = "81a2be"
-let s:purple = "b294bb"
+let s:red = "d54e53"
+let s:orange = "e78c45"
+let s:yellow = "e7c547"
+let s:green = "b9ca4a"
+let s:aqua = "70c0b1"
+let s:blue = "7aa6da"
+let s:purple = "c397d8"
 let s:window = "4d5057"
-
-" Console 256 Colours
-if !has("gui_running")
-	let s:background = "303030"
-	let s:window = "5e5e5e"
-	let s:line = "3a3a3a"
-	let s:selection = "585858"
-end
 
 hi clear
 syntax reset
 
-let g:colors_name = "Tomorrow-Night"
+let g:colors_name = "Tomorrow-Night-Bright"
 
 if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	" Returns an approximate grey index for the given grey level
@@ -245,8 +237,7 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("NonText", s:selection, "", "")
 	call <SID>X("SpecialKey", s:selection, "", "")
 	call <SID>X("Search", s:background, s:yellow, "")
-	call <SID>X("TabLine", s:window, s:foreground, "reverse")
-	call <SID>X("TabLineFill", s:window, s:foreground, "reverse")
+	call <SID>X("TabLine", s:foreground, s:background, "reverse")
 	call <SID>X("StatusLine", s:window, s:yellow, "reverse")
 	call <SID>X("StatusLineNC", s:window, s:foreground, "reverse")
 	call <SID>X("VertSplit", s:window, s:window, "none")
@@ -264,7 +255,6 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 		call <SID>X("CursorColumn", "", s:line, "none")
 		call <SID>X("PMenu", s:foreground, s:selection, "none")
 		call <SID>X("PMenuSel", s:foreground, s:selection, "reverse")
-		call <SID>X("SignColumn", "", s:background, "none")
 	end
 	if version >= 703
 		call <SID>X("ColorColumn", "", s:line, "none")
@@ -351,11 +341,13 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("diffAdded", s:green, "", "")
 	call <SID>X("diffRemoved", s:red, "", "")
 
-	" ShowMarks Highlighting
-	call <SID>X("ShowMarksHLl", s:orange, s:background, "none")
-	call <SID>X("ShowMarksHLo", s:purple, s:background, "none")
-	call <SID>X("ShowMarksHLu", s:yellow, s:background, "none")
-	call <SID>X("ShowMarksHLm", s:aqua, s:background, "none")
+	" Lua Highlighting
+	call <SID>X("luaStatement", s:purple, "", "")
+	call <SID>X("luaRepeat", s:purple, "", "")
+	call <SID>X("luaCondStart", s:purple, "", "")
+	call <SID>X("luaCondElseif", s:purple, "", "")
+	call <SID>X("luaCond", s:purple, "", "")
+	call <SID>X("luaCondEnd", s:purple, "", "")
 
 	" Cucumber Highlighting
 	call <SID>X("cucumberGiven", s:blue, "", "")
@@ -370,14 +362,6 @@ if has("gui_running") || &t_Co == 88 || &t_Co == 256
 	call <SID>X("goTodo", s:yellow, "", "")
 	call <SID>X("goDeclType", s:blue, "", "")
 	call <SID>X("goBuiltins", s:purple, "", "")
-
-	" Lua Highlighting
-	call <SID>X("luaStatement", s:purple, "", "")
-	call <SID>X("luaRepeat", s:purple, "", "")
-	call <SID>X("luaCondStart", s:purple, "", "")
-	call <SID>X("luaCondElseif", s:purple, "", "")
-	call <SID>X("luaCond", s:purple, "", "")
-	call <SID>X("luaCondEnd", s:purple, "", "")
 
 	" Delete Functions
 	delf <SID>X
