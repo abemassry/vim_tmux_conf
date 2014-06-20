@@ -47,5 +47,7 @@ nnoremap <silent> zk O<Esc>
 nnoremap <space> za
 set pastetoggle=<F2>
 colorscheme Tomorrow-Night
+
+set colorcolumn=81
 "set background=dark
 "colorscheme solarized
