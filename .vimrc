@@ -5,7 +5,6 @@ autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
 autocmd FileType php set omnifunc=phpcomplete#CompletePHP
 autocmd FileType c set omnifunc=ccomplete#Complete
-
 au BufNewFile,BufRead *.ejs set filetype=html
 
 filetype on
@@ -17,6 +16,9 @@ set expandtab
 set smarttab
 set shiftwidth=2
 set softtabstop=2
+set tabstop=2
+let spacing = "2Spaces"
+set list lcs=tab:\|\ 
 if version >= 700
    set spl=en spell
    set nospell
@@ -27,7 +29,7 @@ set wildmode=list:longest,full
 
 set number
 set laststatus=2
-set statusline=%<\ %n:%f\ %m%r%y%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+set statusline=%<\ %n:%f\ %m%r%y\ 2Spaces%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 "some color options
 "hi LineNr ctermfg=blue
 "hi TabLine ctermfg=blue ctermbg=darkgrey
@@ -49,5 +51,38 @@ set pastetoggle=<F2>
 colorscheme Tomorrow-Night
 
 set colorcolumn=81
+
+function TabTabs()
+  set shiftwidth=2
+  set tabstop=2
+  set softtabstop=0
+  set noexpandtab
+  set statusline=%<\ %n:%f\ %m%r%y\ Tabs%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+endfunction
+nmap <F3> mz:execute TabTabs()<CR>'z
+
+function Tab2Spaces()
+  set expandtab
+  set smarttab
+  set shiftwidth=2
+  set softtabstop=2
+  set tabstop=2
+  let spacing = "2Spaces"
+  set statusline=%<\ %n:%f\ %m%r%y\ 2Spaces%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+endfunction
+nmap <F4> mz:execute Tab2Spaces()<CR>'z
+
+function Tab4Spaces()
+  set expandtab
+  set smarttab
+  set shiftwidth=4
+  set softtabstop=4
+  set tabstop=4
+  let spacing = "4Spaces"
+  set statusline=%<\ %n:%f\ %m%r%y\ 4Spaces%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+endfunction
+nmap <F5> mz:execute Tab4Spaces()<CR>'z
+
 "set background=dark
 "colorscheme solarized
+execute pathogen#infect()
