@@ -23,6 +23,9 @@ shopt -s checkwinsize
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
+parse_git_branch() {
+ git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -54,16 +57,16 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w$(parse_git_branch)\$ '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$(parse_git_branch)-dude-$PS1"
     ;;
 *)
     ;;
@@ -85,6 +88,8 @@ if [ -n "$DISPLAY" -a "$TERM" == "xterm" ]; then
   export TERM=xterm-256color
 elif [ "$TERM" == "screen" ]; then
   export TERM=screen-256color
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch)-dude-\$ '
+  echo 'dude'
 fi
 
 
@@ -124,4 +129,11 @@ done
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 [[ -s "/home/spider/.rvm/scripts/rvm" ]] && source "/home/spider/.rvm/scripts/rvm"
+PATH=$PATH:/usr/local/cuda-5.5/bin
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-5.5/lib64/:/lib
+
 alias wsend='/home/spider/.wsend/wsend'
+PATH=$PATH:$HOME/bin
+export GIT_PS1_SHOWCOLORHINTS=true
+source ~/.git-prompt.sh
+export PS1='\[\033[0;36m\]\u\[\033[m\]\[\033[0;35m\]@\[\033[0;34m\]\h\[\033[m\]\[\033[0;33m\]:\[\033[0;36m\]\w\[\033[0;32m\]$(__git_ps1 " (%s)")\[\033[0m\] ∮ '
