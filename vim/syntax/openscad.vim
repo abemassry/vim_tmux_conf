@@ -23,9 +23,10 @@ syn keyword openscadConditional if else
 syn keyword openscadRepeat for intersection_for
 syn keyword openscadInclude include use
 syn keyword openscadCsgKeyword union difference intersection render intersection_for
-syn keyword openscadTransform scale rotate translate mirror multmatrix color minkowski 
+syn keyword openscadTransform scale rotate translate mirror multmatrix color minkowski hull projection linear_extrude rotate_extrude
 syn keyword openscadPrimitiveSolid cube sphere cylinder polyhedron surface
 syn keyword openscadPrimitive2D square circle polygon import_dxf
+syn keyword openscadPrimitiveImport import child children
 
 syn match openscadSpecialVariable "\$[a-zA-Z]\+\>" display
 syn match openscadModifier "^\s*[\*\!\#\%]" display
@@ -47,7 +48,8 @@ syn region openscadVector start="\[" end="\]" transparent fold
 
 syn keyword openscadBuiltin abs acos asin atan atan2 ceil cos exp floor ln log
 syn keyword openscadBuiltin lookup max min pow rands round sign sin sqrt tan
-syn keyword openscadBuiltin str 
+syn keyword openscadBuiltin str len search version version_num
+syn keyword openscadBuiltin dxf_cross dxf_dim
 
 hi def link openscadFunctionDef			Structure
 hi def link openscadFunction			Function
@@ -66,6 +68,7 @@ hi def link openscadNumbers			    Number
 hi def link openscadNumber			    Number
 hi def link openscadPrimitiveSolid		Keyword
 hi def link openscadPrimitive2D 		Keyword
+hi def link openscadPrimitiveImport 	Keyword
 hi def link openscadRepeat			    Repeat
 hi def link openscadSpecialVariable		Special
 hi def link openscadString			    String
@@ -73,3 +76,21 @@ hi def link openscadTransform			Statement
 hi def link openscadCommentTodo			Todo
 
 let b:current_syntax = "openscad"
+
+" Contributed by dmeehl @ http://sproutform.com/physibles/12
+" - Inputting opening paren also inserts closing paren
+inoremap ( ()<Esc>i
+" - Inputting opening curly bracket also inputs closing curly bracket
+"   on the next line.
+inoremap { {<CR>}<Esc>kA
+
+" Blatantly stolen from vim74\syntax\c.vim
+"when wanted, highlight trailing white space
+if exists("openscad_space_errors")
+  if !exists("openscad_no_trail_space_error")
+    syn match	openscadSpaceError	display excludenl "\s\+$"
+  endif
+  if !exists("openscad_no_tab_space_error")
+    syn match	openscadSpaceError	display " \+\t"me=e-1
+  endif
+endif

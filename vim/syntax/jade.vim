@@ -1,7 +1,8 @@
 " Vim syntax file
-" Language:	Jade
-" Filenames:	*.jade
-" Ported from tpope's vim-haml
+" Language: Jade
+" Maintainer: Joshua Borton
+" Credits: Tim Pope
+" Filenames: *.jade
 
 if exists("b:current_syntax")
   finish
@@ -12,65 +13,77 @@ if !exists("main_syntax")
 endif
 
 runtime! syntax/html.vim
+runtime! syntax/html/html5.vim
+silent! syntax include @htmlCoffeescript syntax/coffee.vim
+unlet! b:current_syntax
+silent! syntax include @htmlStylus syntax/stylus.vim
+unlet! b:current_syntax
+silent! syntax include @htmlMarkdown syntax/markdown.vim
 unlet! b:current_syntax
 
 syn case match
 
-syn cluster jadeComponent    contains=jadeAttributes,jadeClassChar,jadeIdChar,jadeDespacer,jadeSelfCloser,jadePlainChar
-syn cluster jadeTop          contains=jadeBegin,jadePlainFilter,jadeSassFilter,jadeComment,jadeHtmlComment
+syn region  javascriptParenthesisBlock start="(" end=")" contains=@htmlJavascript contained keepend
+syn cluster htmlJavascript add=javascriptParenthesisBlock
 
-syn match   jadeBegin "^\s*\%([<>]\|&[^=~ ]\)\@!" nextgroup=jadeTag,jadeClassChar,jadeIdChar,jadePlainChar
-syn match   jadeTag        "\w\+" contained contains=htmlTagName,htmlSpecialTagName nextgroup=@jadeComponent
-syn region  jadeAttributes     matchgroup=jadeAttributesDelimiter start="(" end=")" contained contains=htmlArg,jadeAttributeString,jadeAttributeVariable,htmlEvent,htmlCssDefinition nextgroup=@jadeComponent
-syn match   jadeDespacer "[<>]" contained nextgroup=jadeDespacer,jadeSelfCloser,jadePlainChar
-syn match   jadeSelfCloser "/" contained
+syn region  jadeJavascript matchgroup=jadeJavascriptOutputChar start="[!&]\==\|\~" skip=",\s*$" end="$" contained contains=@htmlJavascript keepend
+syn region  jadeJavascript matchgroup=jadeJavascriptChar start="-" skip=",\s*$" end="$" contained contains=@htmlJavascript keepend
+syn cluster jadeTop contains=jadeBegin,jadeComment,jadeHtmlComment,jadeJavascript
+syn match   jadeBegin "^\s*\%([<>]\|&[^=~ ]\)\@!" nextgroup=jadeTag,jadeClassChar,jadeIdChar,jadePlainChar,jadeJavascript,jadeScriptConditional,jadeScriptStatement
+syn match   jadeTag "+\?\w\+\%(:\w\+\)\=" contained contains=htmlTagName,htmlSpecialTagName nextgroup=@jadeComponent
+syn cluster jadeComponent contains=jadeAttributes,jadeIdChar,jadeBlockExpansionChar,jadeClassChar,jadePlainChar,jadeJavascript
+syn match   jadeComment '\s*\/\/.*$'
+syn region  jadeHtmlComment start="^\z(\s*\)/"  end="^\%(\z1\s\|\s*$\)\@!"
+syn region  jadeAttributes matchgroup=jadeAttributesDelimiter start="(" end=")" contained contains=@htmlJavascript,jadeHtmlArg,htmlArg,htmlEvent,htmlCssDefinition nextgroup=@jadeComponent
 syn match   jadeClassChar "\." contained nextgroup=jadeClass
+syn match   jadeBlockExpansionChar ":\s" contained nextgroup=jadeTag
 syn match   jadeIdChar "#{\@!" contained nextgroup=jadeId
 syn match   jadeClass "\%(\w\|-\)\+" contained nextgroup=@jadeComponent
-syn match   jadeId    "\%(\w\|-\)\+" contained nextgroup=@jadeComponent
-syn region  jadeDocType start="^\s*!!!" end="$"
+syn match   jadeId "\%(\w\|-\)\+" contained nextgroup=@jadeComponent
+syn region  jadeDocType start="^\s*\(!!!\|doctype\)" end="$"
+" Unless I'm mistaken, syntax/html.vim requires
+" that the = sign be present for these matches.
+" This adds the matches back for jade.
+syn keyword jadeHtmlArg contained href title
 
 syn match   jadePlainChar "\\" contained
+syn region  jadeInterpolation matchgroup=jadeInterpolationDelimiter start="#{" end="}" contains=@htmlJavascript
+syn match   jadeInterpolationEscape "\\\@<!\%(\\\\\)*\\\%(\\\ze#{\|#\ze{\)"
 
-syn region  jadeAttributeString start=+\%(=\|:\s*\)\@<="+ skip=+\%(\\\\\)*\\"+ end=+"+
-syn match   jadeAttributeVariable "\%(=\|:\s*\)\@<=\%(@@\=\|\$\)\=\w\+" contained
+syn region  jadeJavascriptFilter matchgroup=jadeFilter start="^\z(\s*\):javascript\s*$" end="^\%(\z1\s\|\s*$\)\@!" contains=@htmlJavascript
+syn region  jadeCoffeescriptFilter matchgroup=jadeFilter start="^\z(\s*\):coffeescript\s*$" end="^\%(\z1\s\|\s*$\)\@!" contains=@htmlCoffeescript
+syn region  jadeMarkdownFilter matchgroup=jadeFilter start=/^\z(\s*\):markdown\s*$/ end=/^\%(\z1\s\|\s*$\)\@!/ contains=@htmlMarkdown
+syn region  jadeStylusFilter matchgroup=jadeFilter start="^\z(\s*\):stylus\s*$" end="^\%(\z1\s\|\s*$\)\@!" contains=@htmlStylus
+syn region  jadePlainFilter matchgroup=jadeFilter start="^\z(\s*\):\%(sass\|less\|cdata\)\s*$" end="^\%(\z1\s\|\s*$\)\@!"
 
-syn cluster jadeHtmlTop contains=@htmlTop,htmlBold,htmlItalic,htmlUnderline
-syn region  jadePlainFilter      matchgroup=jadeFilter start="^\z(\s*\):\%(plain\|preserve\|redcloth\|textile\|markdown\|maruku\)\s*$" end="^\%(\z1 \| *$\)\@!" contains=@jadeHtmlTop
-syn region  jadeEscapedFilter    matchgroup=jadeFilter start="^\z(\s*\):\%(escaped\|cdata\)\s*$"    end="^\%(\z1 \| *$\)\@!" 
-syn region  jadeJavascriptFilter matchgroup=jadeFilter start="^\z(\s*\):javascript\s*$" end="^\%(\z1 \| *$\)\@!" contains=@htmlJavaScript keepend
-syn region  jadeCSSFilter        matchgroup=jadeFilter start="^\z(\s*\):css\s*$"        end="^\%(\z1 \| *$\)\@!" contains=@htmlCss keepend
-syn region  jadeSassFilter       matchgroup=jadeFilter start="^\z(\s*\):sass\s*$"       end="^\%(\z1 \| *$\)\@!" contains=@jadeSassTop
+syn match  jadeScriptConditional "\<\%(if\|else\|unless\|while\|for\|until\)\>[?!]\@!"
+syn match  jadeScriptStatement "\<\%(each\|block\|append\|mixin\|extends\|include\)\>[?!]\@!"
 
-syn region  jadeJavascriptBlock start="^\z(\s*\)script" nextgroup=@jadeComponent,jadeError end="^\%(\z1 \| *$\)\@!" contains=@jadeTop,@htmlJavaScript keepend
-syn region  jadeCssBlock        start="^\z(\s*\)style" nextgroup=@jadeComponent,jadeError  end="^\%(\z1 \| *$\)\@!" contains=@jadeTop,@htmlCss keepend
-syn match   jadeError "\$" contained
+syn region  jadeJavascript start="^\z(\s*\)script\%(:\w\+\)\=" end="^\%(\z1\s\|\s*$\)\@!" contains=@htmlJavascript,jadeJavascriptTag keepend 
+syn region  jadeJavascriptTag contained start="^\z(\s*\)script\%(:\w\+\)\=" end="$" contains=jadeBegin,jadeTag
+syn region  jadeCssBlock        start="^\z(\s*\)style" nextgroup=@jadeComponent,jadeError  end="^\%(\z1\s\|\s*$\)\@!" contains=@jadeTop,@htmlCss keepend
 
-syn match   jadeComment "^\s*\/\/-.*$"
-syn match   jadeHtmlComment  "^\s*\/\/[^-].*$"
+syn match  jadeError "\$" contained
 
-hi def link jadeSelfCloser             Special
-hi def link jadeDespacer               Special
-hi def link jadeClassChar              Special
-hi def link jadeIdChar                 Special
-hi def link jadeTag                    Special
-hi def link jadeClass                  Type
-hi def link jadeId                     Identifier
 hi def link jadePlainChar              Special
+hi def link jadeScriptConditional      PreProc
+hi def link jadeScriptStatement        PreProc
+hi def link jadeHtmlArg                htmlArg
 hi def link jadeAttributeString        String
-hi def link jadeAttributeVariable      Identifier
-hi def link jadeDocType                PreProc
+hi def link jadeAttributesDelimiter    Identifier
+hi def link jadeIdChar                 Special
+hi def link jadeClassChar              Special
+hi def link jadeBlockExpansionChar     Special
+hi def link jadeId                     Identifier
+hi def link jadeClass                  Type
+hi def link jadeInterpolationDelimiter Delimiter
 hi def link jadeFilter                 PreProc
-hi def link jadeAttributesDelimiter    Delimiter
-hi def link jadeHtmlComment            SpecialComment
+hi def link jadeDocType                PreProc
 hi def link jadeComment                Comment
-hi def link jadeError                  Error
+hi def link jadeHtmlComment            jadeComment
 
 let b:current_syntax = "jade"
 
 if main_syntax == "jade"
   unlet main_syntax
 endif
-
-set comments=://-,://
-" vim:set sw=2:
