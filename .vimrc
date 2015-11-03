@@ -49,6 +49,10 @@ nnoremap <silent> zk O<Esc>
 nnoremap <space> za
 set pastetoggle=<F2>
 colorscheme Tomorrow-Night
+if &diff
+  set background=dark
+  colorscheme hybrid
+endif
 
 set colorcolumn=81
 
