@@ -98,7 +98,8 @@ function Tab4Spaces()
 endfunction
 nmap <F5> mz:execute Tab4Spaces()<CR>'z
 
-au BufEnter *.* execute GitBranchName()
+nmap <F6> mz:execute GitBranchName()<CR>'z
+execute GitBranchName()
 "set background=dark
 "colorscheme solarized
 execute pathogen#infect()
