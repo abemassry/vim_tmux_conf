@@ -56,12 +56,23 @@ endif
 
 set colorcolumn=81
 
+function GitBranchName()
+  let shellcmd = '~/.git_branch.sh'
+  let gitbranch=system(shellcmd)
+  let g:gitbranch=gitbranch
+endfunction
+
+function Git()
+  return g:gitbranch
+endfunction
+  
+
 function TabTabs()
   set shiftwidth=2
   set tabstop=2
   set softtabstop=0
   set noexpandtab
-  set statusline=%<\ %n:%f\ %m%r%y\ Tabs%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+  set statusline=%<\ %n:%f\ %m%r%y\ Tabs\ %{Git()}\ %=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 endfunction
 nmap <F3> mz:execute TabTabs()<CR>'z
 
@@ -72,7 +83,7 @@ function Tab2Spaces()
   set softtabstop=2
   set tabstop=2
   let spacing = "2Spaces"
-  set statusline=%<\ %n:%f\ %m%r%y\ 2Spaces%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+  set statusline=%<\ %n:%f\ %m%r%y\ 2Spaces\ %{Git()}\ %=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 endfunction
 nmap <F4> mz:execute Tab2Spaces()<CR>'z
 
@@ -83,10 +94,11 @@ function Tab4Spaces()
   set softtabstop=4
   set tabstop=4
   let spacing = "4Spaces"
-  set statusline=%<\ %n:%f\ %m%r%y\ 4Spaces%=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
+  set statusline=%<\ %n:%f\ %m%r%y\ 4Spaces\ %{Git()}\ %=%-35.(line:\ %l\ of\ %L,\ col:\ %c%V\ (%P)%)
 endfunction
 nmap <F5> mz:execute Tab4Spaces()<CR>'z
 
+au BufEnter *.* execute GitBranchName()
 "set background=dark
 "colorscheme solarized
 execute pathogen#infect()
