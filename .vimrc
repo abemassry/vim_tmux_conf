@@ -98,7 +98,7 @@ function Tab4Spaces()
 endfunction
 nmap <F5> mz:execute Tab4Spaces()<CR>'z
 
-nmap <F6> mz:execute GitBranchName()<CR>'z
+nmap <F8> mz:execute GitBranchName()<CR>'z
 execute GitBranchName()
 "set background=dark
 "colorscheme solarized
