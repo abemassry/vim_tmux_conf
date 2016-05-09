@@ -119,13 +119,13 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # {{{
-# Node Completion - Auto-generated, do not touch.
-shopt -s progcomp
-for f in $(command ls ~/.node-completion); do
-  f="$HOME/.node-completion/$f"
-  test -f "$f" && . "$f"
-done
-# }}}
+## Node Completion - Auto-generated, do not touch.
+#shopt -s progcomp
+#for f in $(command ls ~/.node-completion); do
+#  f="$HOME/.node-completion/$f"
+#  test -f "$f" && . "$f"
+#done
+## }}}
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 [[ -s "/home/spider/.rvm/scripts/rvm" ]] && source "/home/spider/.rvm/scripts/rvm"
